@@ -47,19 +47,19 @@ Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripa
 
 Pada saat Arduino IDE dibuka untuk pertama kali, tampilan default akan muncul seperti gambar berikut ini:
 
-![Tampilan Awal Arduino IDE](images\defaultArduinoIDE.png)
+![Tampilan Awal Arduino IDE](images/defaultArduinoIDE.png)
 
 - Setelah itu, mari setel Arduino IDE kita dengan board ESP32 kita. Pada kasus ini kita menggunakan varian ESP32-WROOM DA Module.
 
-![Set Board ESP32](images\setBoardESP32.png)
+![Set Board ESP32](images/setBoardESP32.png)
 
 - Lalu setel `Port` ESP32 kita menjadi PORT USB yang kita gunakan. Pada OS WIndows, biasanya bernilai address `COMxx`. Pada tutorial ini menggunakan `COM4`. Pada OS Linux biasanya diawali `/dev/tty/xxx`. 
 
-![Set ComPort ESP32](images\setCom.png)
+![Set ComPort ESP32](images/setCom.png)
 
 - Setelah board dan port disetel, mari kita upload kode default dari Arduino IDE dengan menekan tombol Upload di pojok kanan atas, atau tekan `CTRL + U` pada Keyboard. 
 
-![Upload Code to ESP32](images\uploadCode.png)
+![Upload Code to ESP32](images/uploadCode.png)
 
 > jika sudah berhasil coba upload kode dibawah ini sebagai contoh lainnya untuk memastikan `LED INTERNAL` berfungi dengan baik.
 
@@ -110,7 +110,7 @@ Tutorial ini menjelaskan cara mengunggah file **JPG** dan **HTML** ke **SPIFFS**
    - Unduh plugin **ESP32 Sketch Data Upload** dari [repositori GitHub ini](https://github.com/me-no-dev/arduino-esp32fs-plugin).
    - Pilih versi yang sesuai dengan sistem operasi Anda (Windows, Mac, atau Linux).
 
-> berikut download plugin SPIFFS ![Download SPIFFS](images\downloadPluginsSPIFFS.png)
+> berikut download plugin SPIFFS ![Download SPIFFS](images/downloadPluginsSPIFFS.png)
 
 
 2. **Ekstrak dan Install Plugin:**
@@ -119,13 +119,13 @@ Tutorial ini menjelaskan cara mengunggah file **JPG** dan **HTML** ke **SPIFFS**
      - **Windows**: `C:\Users\<NamaUser>\Documents\Arduino\tools\ESP32FS\tool\ESP32FS.jar`
      - **Mac/Linux**: Letakkan folder di dalam folder Arduino (di lokasi yang sama seperti pada Windows).
 
-> berikut lokasi instalasi plugin Arduino IDE ![Gambar SPIFFS](images\installPlugin.png)
+> berikut lokasi instalasi plugin Arduino IDE ![Gambar SPIFFS](images/installPlugin.png)
 
 
 3. **Restart Arduino IDE:**
    - Setelah plugin ditempatkan di folder yang benar, tutup Arduino IDE dan buka kembali.
 
-   > berikut tampilan plugin **ESP32 Sketch Data Upload** saat sudah terinstal dengan benar. ![Gambar SPIFFS](images\toolSPIFFS.png)
+   > berikut tampilan plugin **ESP32 Sketch Data Upload** saat sudah terinstal dengan benar. ![Gambar SPIFFS](images/toolSPIFFS.png)
 
 
 ### Langkah 2: Membuat Folder Data dan Menambahkan File JPG dan HTML
@@ -135,7 +135,7 @@ Tutorial ini menjelaskan cara mengunggah file **JPG** dan **HTML** ke **SPIFFS**
    - Buat sketch baru atau buka sketch yang sudah ada.
    - Di dalam folder proyek sketch Anda (biasanya di `C:\Users\<NamaUser>\Documents\Arduino\<NamaSketch>`), buat folder baru bernama `data`.
 
-> Membuat folder data pada sketch folder. ![Gambar SPIFFS](images\buatFoderSPIFFSdata.png)
+> Membuat folder data pada sketch folder. ![Gambar SPIFFS](images/buatFoderSPIFFSdata.png)
 
 2. **Menambahkan File JPG dan HTML:**
    - Tempatkan file-file yang ingin diunggah (misalnya, `image.jpg` dan `index.html`) ke dalam folder `data`.
@@ -157,7 +157,7 @@ Tutorial ini menjelaskan cara mengunggah file **JPG** dan **HTML** ke **SPIFFS**
    - Pastikan juga file gambar `image.jpg` ada di folder data.
 
 
-> Menambahkan file `image.jpg` dan `index.html` pada folder data. ![jpg dan html](images\fileJPGdanHTML.png)
+> Menambahkan file `image.jpg` dan `index.html` pada folder data. ![jpg dan html](images/fileJPGdanHTML.png)
 
 
 ### Langkah 3: Mengunggah File ke SPIFFS
@@ -166,7 +166,7 @@ Tutorial ini menjelaskan cara mengunggah file **JPG** dan **HTML** ke **SPIFFS**
 2. Klik **Tools** dan Anda akan melihat opsi baru bernama **ESP32 Sketch Data Upload**.
 3. Pilih opsi ini dan tunggu hingga proses pengunggahan selesai. Semua file di dalam folder `data` akan diunggah ke SPIFFS ESP32.
 
-> Tanda SPIFFS sudah terunggah dengan sempurna. ![upload SPIFFS](images\prosesUploadSPIFFS.png)
+> Tanda SPIFFS sudah terunggah dengan sempurna. ![upload SPIFFS](images/prosesUploadSPIFFS.png)
 
 ### Langkah 4: Akses File dari SPIFFS di dalam Kode Arduino
 
@@ -241,13 +241,13 @@ void loop() {
 
 1. Setelah program diunggah ke ESP32, sambungkan perangkat (misalnya, laptop atau smartphone) ke WiFi dengan nama **Kelompok_1** dan password **12345678**.
 
-> Sambungkan wifi laptop atau smartphone ke SSID yang sesuai ![WiFi ](images\sambungWifiSPIFFS.png)
+> Sambungkan wifi laptop atau smartphone ke SSID yang sesuai ![WiFi ](images/sambungWifiSPIFFS.png)
 
 2. Buka browser dan masukkan alamat IP default ESP32, biasanya `192.168.4.1`.
 
 3. Halaman web yang di-host oleh ESP32 akan menampilkan pesan "Welcome to ESP32 Web Server" dan gambar yang diunggah.
 
-> Hasil pembacaan `index.html` dan `image.jpg` dari file SPIFFS melalui wifi pada root alamat **192.168.4.1** di browser laptop/smartphone. ![hasil ](images\webserverBerhasilSPIFFS.png)
+> Hasil pembacaan `index.html` dan `image.jpg` dari file SPIFFS melalui wifi pada root alamat **192.168.4.1** di browser laptop/smartphone. ![hasil ](images/webserverBerhasilSPIFFS.png)
 
 
 
