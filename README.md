@@ -57,14 +57,14 @@ void loop() {
   delay(1000);                 // Tunggu 1 detik
 }
 
-
+```
 ## Pinout ESP32
 
 
 
 ## Penggunaan Pertama ESP32
 
-Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripada Arduino IDE versi 2.3.x atau yang terbaru. Ada beberapa fitur dari Arduino versi lama yang belum ada pada versi terbaru. Jadi silahkan [download Arduino IDE 1.8.x](https://www.arduino.cc/en/software "Download Arduino IDE 1.8.x ya") pada link berikut ya... 
+Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripada Arduino IDE versi 2.3.x atau yang terbaru. Ada beberapa fitur dari Arduino versi lama yang belum ada pada versi terbaru. Jadi silahkan [download Arduino IDE 1.8.x](https://www.arduino.cc/en/software) pada link berikut ya... 
 
-![Legacy Arduino IDE](images/download_ArduinoIDE.jpg)
+![Legacy Arduino IDE](https://github.com/yogidm/ESP32-Bahasa-Indonesia/blob/main/images/download_ArduinoIDE.jpg)
 
