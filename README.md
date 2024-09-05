@@ -59,6 +59,12 @@ void loop() {
 
 ```
 
+Kode ini berfungsi untuk mengontrol LED internal pada board ESP32, yang biasanya terhubung ke pin `GPIO 2`. Pada awal program, pin `GPIO 2` diatur sebagai `OUTPUT` melalui fungsi `pinMode()`, yang memungkinkan ESP32 mengendalikan LED secara langsung. Fungsi `setup()` hanya dijalankan sekali saat board ESP32 dimulai atau di-reset, memastikan bahwa konfigurasi pin siap digunakan. Setelah itu, fungsi `loop()` akan berjalan terus menerus selama board ESP32 beroperasi, menyalakan dan mematikan LED dengan jeda waktu yang diatur oleh fungsi `delay()`.
+
+Dalam fungsi `loop()`, LED akan dinyalakan dengan memberikan sinyal `HIGH` ke pin `GPIO 2`, yang menyebabkan LED menyala. Setelah 1 detik, fungsi `delay()` menunda eksekusi untuk menjaga LED tetap menyala selama periode ini. Setelahnya, LED dimatikan dengan memberikan sinyal `LOW` ke pin `GPIO 2`, lalu program kembali menunggu selama 1 detik. Siklus ini terus berulang, sehingga LED akan berkedip dengan pola 1 detik menyala dan 1 detik mati, menciptakan efek berkedip secara kontinu.
+
+
+
 ## 2.3 Tes Upload SPIFFS
 
 SPIFFS (SPI Flash File System) memungkinkan Anda menyimpan file di ESP32 dan mengaksesnya dari kode Arduino.
@@ -236,6 +242,9 @@ void loop() {
 2. Buka browser dan masukkan alamat IP default ESP32, biasanya `192.168.4.1`.
 
 3. Halaman web yang di-host oleh ESP32 akan menampilkan pesan "Welcome to ESP32 Web Server" dan gambar yang diunggah.
+
+
+
 
 
 
