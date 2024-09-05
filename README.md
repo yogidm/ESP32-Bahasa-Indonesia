@@ -68,14 +68,3 @@ Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripa
 
 ![Legacy Arduino IDE](images/download_ArduinoIDE.jpg)
 
-
-
-
-```python
-
-```
-
-
-```python
-
-```
