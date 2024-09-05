@@ -26,9 +26,9 @@ Bagian ini menjelaskan pinout dari ESP32. ESP32 memiliki beberapa pin GPIO, powe
 ### Referensi Pinout ESP32:
 - GPIO: General Purpose Input/Output
 - ADC: Analog to Digital Converter (Pin GPIO 34-39)
-- DAC: Digital to Analog nverter (PiP
-Inline-style: 
-)/esphome.io/devices/esp32.html)
+- DAC: Digital to Analog nverter
+
+![pinOUT](https://content.instructables.com/FOL/YWLI/JEOILQ5U/FOLYWLIJEOILQ5U.png?auto=webp&frame=1&width=1024&fit=bounds&md=a74a05c18f4b4d9f0db00ec63c7bc3c0)
 
 ---
 
