@@ -43,7 +43,13 @@ Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripa
 
 Untuk driver silahkan mengikut tutorial pada [link berikut ini](https://samueladesola.medium.com/how-to-set-up-esp32-wroom-32-b2100060470c)
 
+- Masuk ke board manager pada `tool >> Board >> Board Manager`
 
+![Gambar Manager Board](/images/installESP32Board.png)
+
+- Cari `ESP32` dan install dari `Expressif System`
+
+![gambar esp32 essential](/images/installESP32Board_esp32.png)
 
 ### 2.2 Tes Upload Kode Pertama
 
