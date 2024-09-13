@@ -259,3 +259,14 @@ void loop() {
 
 
 
+***Tugas Minggu 2***
+
+Buat sebuah sistem untuk mengontrol 5 buah aktuator yang diwakili oleh 5 led dengan tampilan UI :
+
+- Ada logo UM 
+- Lingkran warna hijau (on) dan abu-abu (off)
+- Wifi AP sesuai nama kelompok dan password sesuai yang sudah disepakati. 
+- Tambahkan nama anggota kelompok dibagian bawah
+
+![gambar tugas](/images/tugasMinggu2.png)
+
