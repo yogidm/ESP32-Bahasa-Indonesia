@@ -383,6 +383,123 @@ Persiapan:
 
 ![chart.jd](/images/simpanChartJS.png)
 
+### Kode Test DHT dan chart.js
+
+```cpp
+#include <WiFi.h>
+#include <WebServer.h>
+#include <DHT.h>
+#include <FS.h>
+#include <SPIFFS.h>
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+WebServer server(80);
+
+// Array untuk menyimpan data pembacaan (200 sampling terakhir)
+float temperatureData[200];
+float humidityData[200];
+int dataIndex = 0;
+
+// HTML untuk menampilkan data dengan lingkaran dan countdown
+void handleRoot() {
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  // Jika ada error dalam pembacaan
+  if (isnan(temperature) || isnan(humidity)) {
+    temperature = 0.0;
+    humidity = 0.0;
+  }
+
+  // Simpan data ke dalam array, replace jika sudah lebih dari 200 sample
+  temperatureData[dataIndex] = temperature;
+  humidityData[dataIndex] = humidity;
+  dataIndex = (dataIndex + 1) % 200;  // Circular buffer
+
+  // Membuat halaman HTML
+  String html = "<html><head><title>Pembacaan Suhu dan Kelembapan DHT22</title>";
+  html += "<meta http-equiv='refresh' content='5'>";  // Refresh otomatis setiap 5 detik
+  html += "<style>";
+  html += "body{text-align:center; font-family: Arial;}";
+  html += ".circle{width:150px; height:150px; border-radius:50%; background-color:#4CAF50; display:inline-block; color:white; font-size:24px; line-height:150px; margin:20px;}";
+  html += "</style>";
+  
+  // JavaScript untuk countdown timer
+  html += "<script>";
+  html += "var countdown = 5;";
+  html += "setInterval(function() { document.getElementById('timer').innerHTML = countdown + ' detik'; countdown--; if (countdown < 0) { countdown = 5; } }, 1000);";
+  html += "</script></head><body>";
+
+  // Menampilkan hasil pembacaan dengan lingkaran
+  html += "<h1>Pembacaan Suhu dan Kelembapan DHT22</h1>";
+  html += "<div><h2>Suhu</h2><div class='circle'>" + String(temperature) + " &deg;C</div></div>";
+  html += "<div><h2>Kelembapan</h2><div class='circle'>" + String(humidity) + " %</div></div>";
+  html += "<p>Update data setiap <span id='timer'>5 detik</span></p>";
+
+  // Menampilkan chart jika file chart.js sudah di-load
+  html += "<canvas id='tempChart' width='400' height='200'></canvas>";
+  html += "<script src='/chart.js'></script>";
+  html += "<script>";
+  html += "var tempData = " + generateArrayString(temperatureData) + ";";
+  html += "var humData = " + generateArrayString(humidityData) + ";";
+  html += "var ctx = document.getElementById('tempChart').getContext('2d');";
+  html += "var chart = new Chart(ctx, { type: 'line', data: { labels: Array.from({length: 200}, (v, i) => i+1), datasets: [{label: 'Suhu (°C)', borderColor: 'red', data: tempData, fill: false}, {label: 'Kelembapan (%)', borderColor: 'blue', data: humData, fill: false}] }, options: { scales: { y: { beginAtZero: true }}} });";
+  html += "</script>";
+
+  html += "</body></html>";
+
+  server.send(200, "text/html", html);
+}
+
+// Helper function untuk generate array ke string (untuk chart)
+String generateArrayString(float arr[]) {
+  String arrStr = "[";
+  for (int i = 0; i < 200; i++) {
+    arrStr += String(arr[i]);
+    if (i < 199) arrStr += ",";
+  }
+  arrStr += "]";
+  return arrStr;
+}
+
+// Mengirim file chart.js dari SPIFFS
+void handleChartJS() {
+  File file = SPIFFS.open("/chart.js", "r");
+  server.streamFile(file, "application/javascript");
+  file.close();
+}
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();  // Inisialisasi sensor DHT22
+
+  // Inisialisasi SPIFFS
+  if (!SPIFFS.begin(true)) {
+    Serial.println("Failed to mount SPIFFS");
+    return;
+  }
+
+  // Inisialisasi WiFi sebagai Access Point
+  WiFi.softAP("ESP32_DHT22_Sensor");
+  Serial.println("Access Point 'ESP32_DHT22_Sensor' Started");
+
+  // Menangani permintaan dari halaman utama
+  server.on("/", handleRoot);
+  server.on("/chart.js", handleChartJS);  // Serve file chart.js dari SPIFFS
+
+  // Memulai server web
+  server.begin();
+  Serial.println("Web server started");
+}
+
+void loop() {
+  server.handleClient();
+}
+```
+
 
 
 
