@@ -396,6 +396,10 @@ Persiapan:
 #define DHTTYPE DHT22
 
 DHT dht(DHTPIN, DHTTYPE);
+const char* ssid = "Kelompok_X";
+const char* password = "12345678";
+
+
 WebServer server(80);
 
 // Array untuk menyimpan data pembacaan (200 sampling terakhir)
@@ -426,7 +430,7 @@ void handleRoot() {
   html += "body{text-align:center; font-family: Arial;}";
   html += ".circle{width:150px; height:150px; border-radius:50%; background-color:#4CAF50; display:inline-block; color:white; font-size:24px; line-height:150px; margin:20px;}";
   html += "</style>";
-  
+
   // JavaScript untuk countdown timer
   html += "<script>";
   html += "var countdown = 5;";
@@ -483,7 +487,7 @@ void setup() {
   }
 
   // Inisialisasi WiFi sebagai Access Point
-  WiFi.softAP("ESP32_DHT22_Sensor");
+  WiFi.softAP(ssid, password);
   Serial.println("Access Point 'ESP32_DHT22_Sensor' Started");
 
   // Menangani permintaan dari halaman utama
@@ -498,6 +502,7 @@ void setup() {
 void loop() {
   server.handleClient();
 }
+
 ```
 
 
