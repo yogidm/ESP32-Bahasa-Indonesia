@@ -258,7 +258,7 @@ void loop() {
 > Hasil pembacaan `index.html` dan `image.jpg` dari file SPIFFS melalui wifi pada root alamat **192.168.4.1** di browser laptop/smartphone. ![hasil ](images/webserverBerhasilSPIFFS.png)
 
 
-
+---
 ***Tugas Minggu 2***
 
 Buat sebuah sistem untuk mengontrol 5 buah aktuator yang diwakili oleh 5 led dengan tampilan UI :
@@ -269,4 +269,120 @@ Buat sebuah sistem untuk mengontrol 5 buah aktuator yang diwakili oleh 5 led den
 - Tambahkan nama anggota kelompok dibagian bawah
 
 ![gambar tugas](/images/tugasMinggu2.png)
+
+---
+
+## Minggu 3 - Sensor DHT22
+
+### Akses Sensor DHT22 (Sensor Suhu dan Kelembapan)
+
+Komponen yang dibutuhkan:
+- ESP32
+- Sensor DHT22
+- Resistor 10kΩ (untuk pull-up)
+
+Koneksi Pin:
+- DHT22 Pin VCC ke Pin 3.3V pada ESP32.
+- DHT22 Pin GND ke GND pada ESP32.
+- DHT22 Pin Data (OUT) ke Pin GPIO 4 pada ESP32 (sesuai dengan kode #define DHTPIN 4).
+- Resistor 10kΩ dihubungkan antara Pin Data dan VCC (3.3V) sebagai pull-up resistor.
+
+> Resistor 10kΩ berfungsi sebagai pull-up pada jalur Data untuk menjaga sinyal tetap stabil.
+
+> Pastikan menggunakan pinout yang sesuai dengan board ESP32 yang Anda gunakan, terutama perhatikan nomor GPIO (General Purpose Input Output) pada pin Data DHT22.
+
+![Gambar Pinout DHT22](https://content.instructables.com/FIB/7CUR/IBJTKMON/FIB7CURIBJTKMON.png?auto=webp&fit=bounds&frame=1)
+
+
+***Contoh Kode Akses DHT22***
+
+```cpp
+#include <WiFi.h>
+#include <WebServer.h>
+#include <DHT.h>
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const char* ssid = "Kelompok_X";
+const char* password = "12345678";
+
+WebServer server(80);  // Menginisialisasi server web pada port 80
+
+// HTML untuk menampilkan data dan tombol refresh
+void handleRoot() {
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  // Cek apakah pembacaan data berhasil
+  if (isnan(temperature) || isnan(humidity)) {
+    temperature = 0.0;
+    humidity = 0.0;
+  }
+
+  // Membuat halaman HTML
+  String html = "<html><head><title>DHT22 Sensor</title>";
+  html += "<meta http-equiv='refresh' content='10'>";  // Refresh otomatis setiap 10 detik
+  html += "<style>body{text-align:center; font-family: Arial;} button{padding:10px; font-size:18px;}</style>";
+  html += "</head><body>";
+  html += "<h1>Data Sensor DHT22</h1>";
+  html += "<p>Temperature: " + String(temperature) + " &deg;C</p>";
+  html += "<p>Humidity: " + String(humidity) + " %</p>";
+  html += "<button onclick='location.reload()'>Refresh Data</button>";  // Tombol untuk refresh halaman
+  html += "</body></html>";
+
+  server.send(200, "text/html", html);
+}
+
+// Setup WiFi dan DHT
+void setup() {
+  Serial.begin(115200);
+  dht.begin();  // Inisialisasi sensor DHT22
+
+  // Inisialisasi WiFi sebagai Access Point
+  WiFi.softAP(ssid, password);
+  Serial.println("Access Point 'ESP32_DHT22_Sensor' Started");
+
+  // Menangani permintaan dari halaman utama
+  server.on("/", handleRoot);
+
+  // Memulai server web
+  server.begin();
+  Serial.println("Web server started");
+}
+
+void loop() {
+  // Menangani setiap permintaan client
+  server.handleClient();
+}
+```
+
+> Kurang lebih akan memunculkan hasil pembacaan pada web seperti berikut ini. ![Hasil Pembacaan DHT22](/images/hasilTestDHT22.png)
+
+
+### Cara Membuat dan Menampilkan Chart Pada HTML
+Pada tutorial ini, kita akan membuat web server berbasis ESP32 yang menampilkan grafik data sensor suhu dan kelembapan dari DHT22. Grafik ini akan dibuat menggunakan Chart.js yang disimpan pada SPIFFS (SPI Flash File System) ESP32. Web server dapat diakses melalui alamat 192.168.4.1 setelah ESP32 diatur sebagai Access Point sesuai dengan kelompok masing-masing.
+
+Komponen:
+- ESP32
+- Sensor DHT22
+- Kabel jumper dan breadboard
+
+Persiapan:
+
+- ***Library DHT***: Instal library DHT untuk membaca data dari sensor.
+
+> Buka Arduino IDE > Library Manager > Cari dan instal DHT sensor library dan Adafruit Unified Sensor.
+
+- ***Library chart.js*** : Install chart.js untuk menggunakan fungsi chart pada html dari [https://cdn.jsdelivr.net/npm/chart.js](https://cdn.jsdelivr.net/npm/chart.js).
+- Lalu tekan `ctrl + S` dengan filename `chart.js` seperti gamba berikut ini. Simpan pada folder `/data` agar dapat diunggah pada SPIFFS ESP32. 
+
+- ***SPIFFS*** : Pastikan Anda telah menginstal plugin untuk `ESP32 File System Uploader`. Untuk mengunggah file Chart.js ke SPIFFS.
+
+![chart.jd](/images/simpanChartJS.png)
+
+
+
 
