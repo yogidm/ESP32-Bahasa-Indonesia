@@ -293,6 +293,11 @@ Koneksi Pin:
 
 ![Gambar Pinout DHT22](https://content.instructables.com/FIB/7CUR/IBJTKMON/FIB7CURIBJTKMON.png?auto=webp&fit=bounds&frame=1)
 
+***Library DHT22***
+
+> Buka Arduino IDE > Library Manager > Cari `DHT22` >> Install `DHT Sensor library` by Adafruit. ![library DHT22](/images/installLibraryDHT22ArduinoIDE.png)
+
+
 
 ***Contoh Kode Akses DHT22***
 
@@ -371,10 +376,9 @@ Komponen:
 - Kabel jumper dan breadboard
 
 Persiapan:
+- ***Library DHT22***
 
-- ***Library DHT***: Instal library DHT untuk membaca data dari sensor.
-
-> Buka Arduino IDE > Library Manager > Cari dan instal DHT sensor library dan Adafruit Unified Sensor.
+> Buka Arduino IDE > Library Manager > Cari `DHT22` >> Install `DHT Sensor library` by Adafruit. ![library DHT22](/images/installLibraryDHT22ArduinoIDE.png)
 
 - ***Library chart.js*** : Install chart.js untuk menggunakan fungsi chart pada html dari [https://cdn.jsdelivr.net/npm/chart.js](https://cdn.jsdelivr.net/npm/chart.js).
 - Lalu tekan `ctrl + S` dengan filename `chart.js` seperti gamba berikut ini. Simpan pada folder `/data` agar dapat diunggah pada SPIFFS ESP32. 
