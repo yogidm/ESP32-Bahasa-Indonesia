@@ -505,6 +505,16 @@ void loop() {
 
 ```
 
+***Tugas Minggu ke-3***
 
+Buat sistem otomatis untuk membaca DHT22 dan menampilkannya dengan menggunakan grafik dengan ketentuan:
+- Logo UM, judul sistem, dan identitas kelompok (contoh: `"CV Kelompok X Jaya"`)
+- Terdapat indikator suhu dan kelembapan dengan nilai tiap pengukuran berada pada tengah lingkaran.
+- Terdapat grafik
+- Terdapat status kipas dan sprinkler saat mati atau nyala
+- ***Gunakan Variasi Warna UI yang profesional dan enak dipandang*** -> gunakan [https://color.adobe.com/explore](https://color.adobe.com/explore) untuk referensi warna sesuai selera.
+- Gunakan semua sumberdaya yang bisa digunakan untuk mendukung pembuatan proyek ini. 
 
+> Referensi Tugas Minggu 3 ![referensi tugas mingguu 3](/images/referensiTugasMinggu3.png)
 
+---
