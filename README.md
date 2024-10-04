@@ -875,7 +875,13 @@ void loop() {
   // Tampilkan teks pada OLED sesuai pola yang dipilih
   displayTextPattern();
 }
-```
+~~~
+
+#### Tugas Minggu 5 - Jadwal Sholat
+
+![Tugas Minggu 5](/images/TugasMinggu5-JadwalSholat.png)
+
+
 
 
 
