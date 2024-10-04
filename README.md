@@ -522,3 +522,360 @@ Buat sistem otomatis untuk membaca DHT22 dan menampilkannya dengan menggunakan g
 > Referensi Tugas Minggu 3 ![referensi tugas mingguu 3](/images/referensiTugasMinggu3.png)
 
 ---
+
+Minggu 4 - Ada kuliah tamu tentang IoT
+
+---
+
+## Minggu 5 - OLED Display 128px x 64px I2C  
+
+### Memeriksa OLED I2C 128x64 pada ESP32 agar siap digunakan
+
+Persiapan Alat dan Bahan:
+- ESP32 
+- OLED 128x64 I2C Display (dengan alamat I2C biasanya ***0x3C***)
+- Kabel jumper dan breadboard
+
+Rangkaian :
+
+- VCC ke 3.3V (ESP32)
+- GND ke GND (ESP32)
+- SCL ke GPIO 22 (pin I2C default ESP32 untuk SCL)
+- SDA ke GPIO 21 (pin I2C default ESP32 untuk SDA)
+
+Instalasi Library di Arduino IDE:
+
+1. Buka Arduino IDE.
+2. Masuk ke Tools -> Manage Libraries.
+3. Cari Adafruit SSD1306 dan klik Install.
+4. Cari juga Adafruit GFX dan klik Install.
+
+Kode untuk Memeriksa OLED:
+
+~~~cpp
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // Lebar layar OLED
+#define SCREEN_HEIGHT 64 // Tinggi layar OLED
+
+// Deklarasi objek OLED menggunakan I2C, alamat biasanya 0x3C
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  // Memulai komunikasi serial untuk debugging
+  Serial.begin(115200);
+
+  // Inisialisasi OLED display
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Alamat I2C 0x3C
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Berhenti jika OLED gagal diinisialisasi
+  }
+
+  // Clear layar OLED
+  display.clearDisplay();
+
+  // Menampilkan teks "Hello, World!"
+  display.setTextSize(2);              // Mengatur ukuran teks
+  display.setTextColor(SSD1306_WHITE); // Mengatur warna teks (putih)
+  display.setCursor(0, 10);            // Mengatur posisi awal teks
+  display.println(F("Hello, World!"));
+
+  // Menampilkan perubahan di layar
+  display.display(); 
+}
+
+void loop() {
+  // Tidak perlu ada isi pada loop
+}
+~~~
+
+> Kode ini akan menampilkan teks "Hello, World!" pada OLED.
+
+###  Cek Alamat I2C OLED (Opsional)
+
+Apabila OLED tidak menampilkan teks, coba cek alamat I2C dari OLED tersebut dengan menggunakan I2C Scanner dengan menggunakan kode berikut dan amati pada serial monitor. Kadang, alamat I2C OLED bisa berbeda (misalnya 0x3C atau 0x3D).
+
+~~~cpp
+#include <Wire.h>
+
+void setup() {
+  Serial.begin(115200);
+  Wire.begin();
+  Serial.println("\nI2C Scanner: ");
+}
+
+void loop() {
+  byte error, address;
+  int nDevices = 0;
+
+  for(address = 1; address < 127; address++ ) {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0) {
+      Serial.print("I2C device found at address 0x");
+      if (address < 16) 
+        Serial.print("0");
+      Serial.print(address, HEX);
+      Serial.println("  !");
+
+      nDevices++;
+    }
+    else if (error == 4) {
+      Serial.print("Unknown error at address 0x");
+      if (address < 16) 
+        Serial.print("0");
+      Serial.println(address, HEX);
+    }    
+  }
+  if (nDevices == 0)
+    Serial.println("No I2C devices found\n");
+  else
+    Serial.println("done\n");
+
+  delay(5000);           // wait 5 seconds for next scan
+}
+~~~
+
+
+### Mengontrol Isi Text OLED Menggunakan HTML
+
+Pada kegiatan ini, diharapkan pengguna (user) dapat mengontrol dan menampilkan teks dinamis pada layar OLED 128x64 menggunakan ESP32 melalui antarmuka web berbasis HTML. 
+
+Spesifikasi yang diharapkan:
+
+- Pengguna dapat menginput teks melalui halaman web yang disediakan oleh ESP32.
+- Sistem akan merespons secara real-time setiap perubahan teks yang dikontrol melalui HTML.
+- Teks yang dimasukkan akan muncul pada layar OLED 128x64 I2C dan akan bergerak mengikuti pola yang sudah ditentukan.
+- User dapat memilih pola apa yang digunakan melalui HTML (ada 8 pola)
+
+Contoh Kode Program:
+
+~~~cpp
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Pin I2C OLED
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Inisialisasi Web Server pada port 80
+WebServer server(80);
+
+// Variabel untuk menyimpan teks dan pola yang diinput dari HTML
+String displayText = "Hello World!";
+int pattern = 0;
+
+// Nama dan password WiFi ESP32
+const char* ssid = "Kelompok_X";
+const char* password = "12345678";
+
+// Fungsi untuk menampilkan halaman HTML
+void handleRoot() {
+  String html = "<html><head><title>Kontrol OLED</title></head><body>";
+  html += "<h1>Kontrol OLED 128x64</h1>";
+  html += "<form action=\"/submit\" method=\"POST\">";
+  html += "Teks yang ditampilkan: <input type=\"text\" name=\"text\" value=\"" + displayText + "\"><br><br>";
+  html += "Pilih Pola: <select name=\"pattern\">";
+  
+  // Pilihan pola gerakan
+  html += "<option value=\"0\" " + String((pattern == 0) ? "selected" : "") + ">Pola 0: Statis</option>";
+  html += "<option value=\"1\" " + String((pattern == 1) ? "selected" : "") + ">Pola 1: Scroll Kiri</option>";
+  html += "<option value=\"2\" " + String((pattern == 2) ? "selected" : "") + ">Pola 2: Scroll Kanan</option>";
+  html += "<option value=\"3\" " + String((pattern == 3) ? "selected" : "") + ">Pola 3: Scroll Atas</option>";
+  html += "<option value=\"4\" " + String((pattern == 4) ? "selected" : "") + ">Pola 4: Scroll Bawah</option>";
+  html += "<option value=\"5\" " + String((pattern == 5) ? "selected" : "") + ">Pola 5: Flashing</option>";
+  html += "<option value=\"6\" " + String((pattern == 6) ? "selected" : "") + ">Pola 6: Blink</option>";
+  html += "<option value=\"7\" " + String((pattern == 7) ? "selected" : "") + ">Pola 7: Bergeser</option>";
+  
+  html += "</select><br><br>";
+  html += "<input type=\"submit\" value=\"Update\">";
+  html += "</form></body></html>";
+
+  server.send(200, "text/html", html);
+}
+
+// Fungsi untuk menangani input dari HTML
+void handleSubmit() {
+  if (server.hasArg("text")) {
+    displayText = server.arg("text");  // Simpan teks
+  }
+  if (server.hasArg("pattern")) {
+    pattern = server.arg("pattern").toInt();  // Simpan pola
+  }
+  
+  // Redirect ke halaman utama
+  server.sendHeader("Location", "/");
+  server.send(303);
+}
+
+// Fungsi untuk menampilkan teks berdasarkan pola yang dipilih
+void displayTextPattern() {
+  display.clearDisplay();
+  
+  switch (pattern) {
+    case 0:
+      // Pola 0: Teks statis
+      display.setCursor(0, 20);
+      display.setTextSize(1);
+      display.setTextColor(SSD1306_WHITE);
+      display.print(displayText);
+      display.display();
+      break;
+
+    case 1:
+      // Pola 1: Scroll Kiri
+      for (int i = 128; i > -((int)displayText.length() * 6); i--) {
+        display.clearDisplay();
+        display.setCursor(i, 20);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      break;
+
+    case 2:
+      // Pola 2: Scroll Kanan
+      for (int i = -((int)displayText.length() * 6); i < 128; i++) {
+        display.clearDisplay();
+        display.setCursor(i, 20);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      break;
+
+    case 3:
+      // Pola 3: Scroll Atas
+      for (int i = 64; i > -10; i--) {
+        display.clearDisplay();
+        display.setCursor(0, i);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      break;
+
+    case 4:
+      // Pola 4: Scroll Bawah
+      for (int i = -10; i < 64; i++) {
+        display.clearDisplay();
+        display.setCursor(0, i);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      break;
+
+    case 5:
+      // Pola 5: Flashing (Muncul dan Hilang berkali-kali)
+      for (int i = 0; i < 5; i++) {
+        display.clearDisplay();
+        display.setCursor(0, 20);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(500);
+        display.clearDisplay();  // Hilangkan teks
+        display.display();
+        delay(500);
+      }
+      break;
+
+    case 6:
+      // Pola 6: Blink (Kedip teks)
+      for (int i = 0; i < 10; i++) {
+        display.clearDisplay();
+        display.setCursor(0, 20);
+        display.setTextSize(1);
+        display.setTextColor((i % 2 == 0) ? SSD1306_WHITE : SSD1306_BLACK); // Ganti warna antara putih dan hitam
+        display.print(displayText);
+        display.display();
+        delay(300);
+      }
+      break;
+
+    case 7:
+      // Pola 7: Bergeser (Teks geser bolak-balik)
+      for (int i = 0; i < 128; i++) {
+        display.clearDisplay();
+        display.setCursor(i, 20);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      for (int i = 128; i >= 0; i--) {
+        display.clearDisplay();
+        display.setCursor(i, 20);
+        display.setTextSize(1);
+        display.setTextColor(SSD1306_WHITE);
+        display.print(displayText);
+        display.display();
+        delay(50);
+      }
+      break;
+
+    default:
+      // Jika pola tidak ditemukan, tampilkan teks statis
+      display.setCursor(0, 20);
+      display.setTextSize(1);
+      display.setTextColor(SSD1306_WHITE);
+      display.print(displayText);
+      display.display();
+      break;
+  }
+}
+
+void setup() {
+  // Inisialisasi Serial dan OLED
+  Serial.begin(115200);
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Alamat I2C OLED
+    Serial.println(F("OLED gagal dimulai"));
+    for (;;);  // Berhenti jika OLED gagal dimulai
+  }
+  display.clearDisplay();
+  display.display();
+  
+  // Setup WiFi sebagai Access Point
+  WiFi.softAP(ssid, password);
+  Serial.println("Access Point dimulai");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.softAPIP());
+
+  // Setup server dan rute
+  server.on("/", handleRoot);
+  server.on("/submit", HTTP_POST, handleSubmit);
+  
+  // Mulai server
+  server.begin();
+  Serial.println("Server web dimulai");
+}
+
+void loop() {
+  // Tangani permintaan klien web
+  server.handleClient();
+  
+  // Tampilkan teks pada OLED sesuai pola yang dipilih
+  displayTextPattern();
+}
+```
+
+
+
