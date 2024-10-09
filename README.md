@@ -41,7 +41,8 @@ Kita akan melakukan pemrograman ESP32 menggunakan Arduino IDE versi 1.8.x daripa
 
 ![Legacy Arduino IDE](/images/download_ArduinoIDE.jpg)
 
-Untuk driver silahkan mengikut tutorial pada [link berikut ini](https://samueladesola.medium.com/how-to-set-up-esp32-wroom-32-b2100060470c)
+Untuk driver silahkan mengikut tutorial pada [link berikut ini](https://samueladesola.medium.com/how-to-set-up-esp32-wroom-32-b2100060470c). 
+> [Link Download CP210x](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads)
 
 - Masuk ke board manager pada `tool >> Board >> Board Manager`
 
